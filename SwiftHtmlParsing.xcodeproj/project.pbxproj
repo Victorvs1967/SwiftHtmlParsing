@@ -14,6 +14,7 @@
 		D33EDFF4235E25D400AAC0E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D33EDFF3235E25D400AAC0E5 /* Assets.xcassets */; };
 		D33EDFF7235E25D400AAC0E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D33EDFF5235E25D400AAC0E5 /* LaunchScreen.storyboard */; };
 		D35D0F51235F3BF400F220E2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35D0F50235F3BF400F220E2 /* SceneDelegate.swift */; };
+		D35D0F53235F9D0800F220E2 /* PageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35D0F52235F9D0800F220E2 /* PageData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		D33EDFF6235E25D400AAC0E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D33EDFF8235E25D400AAC0E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D35D0F50235F3BF400F220E2 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D35D0F52235F9D0800F220E2 /* PageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageData.swift; sourceTree = "<group>"; };
 		DAA65B2A3D8556A6D3E09850 /* Pods-SwiftHtmlParsing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftHtmlParsing.release.xcconfig"; path = "Target Support Files/Pods-SwiftHtmlParsing/Pods-SwiftHtmlParsing.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,6 +113,7 @@
 		D33EE000235E273200AAC0E5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D35D0F52235F9D0800F220E2 /* PageData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D35D0F53235F9D0800F220E2 /* PageData.swift in Sources */,
 				D33EDFEF235E252D00AAC0E5 /* ViewController.swift in Sources */,
 				D33EDFEB235E252D00AAC0E5 /* AppDelegate.swift in Sources */,
 				D35D0F51235F3BF400F220E2 /* SceneDelegate.swift in Sources */,

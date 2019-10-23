@@ -10,25 +10,34 @@ import UIKit
 import WebKit
 import Alamofire
 import SwiftSoup
+import RealmSwift
 
 class ViewController: UIViewController {
   
+  let queue = DispatchQueue.global(qos: .utility)
+  
   var pagesCount: Int = 0
-  var pages = [String: (String, String)]()
   
   @IBOutlet weak var webView: WKWebView!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    loadPage()
-    print(pagesCount)
     
-    for page in pages {
-      print("Title: \(page.key)")
-      print("Link: \(page.value.0)")
-      print("Image: \(page.value.1)\n")
-    }
+    let path = try! Realm().configuration.fileURL?.absoluteString
+    print(path!)
+    
+    loadPage()
+    
+    //    let pages = try! Realm().objects(PageData.self)
+    //
+    //    for page in pages! {
+    //      print("Title: \(page.title)")
+    //      print("Link: \(page.link)")
+    //      print("Image: \(page.image)\n")
+    //    }
+    
+    print(pagesCount)
   }
   
   private func loadPage() {
@@ -36,22 +45,18 @@ class ViewController: UIViewController {
     let baseUrl = "https://vesti.ua"
     let basePath = "/feed/1-vse-novosti/"
     
-    let queue = DispatchQueue.global(qos: .utility)
     let semaphore = DispatchSemaphore(value: 0)
+    let realm = try! Realm()
     
-    var page = 1
+    var pageNumber = 1
+    var url: String
     
-//    while page != pagesCount {
-    while page < 250 {
-      print(page, pagesCount)
-      AF.request(baseUrl + basePath).validate().responseString(queue: queue) { response in
+    while pageNumber != pagesCount {
+      url = "\(baseUrl)\(basePath)\(pageNumber)"
+      AF.request(url).validate().responseString(queue: queue) { response in
         
         switch response.result {
         case .success(let html):
-          
-          //        DispatchQueue.main.async {
-          //          self.webView.loadHTMLString(html, baseURL: URL(string: url))
-          //        }
           
           do {
             let doc: Document = try SwiftSoup.parse(html)
@@ -60,16 +65,32 @@ class ViewController: UIViewController {
             let articles: Elements = try main.getElementsByClass("col-12 imageArticleRedesignTop").select("a")
             
             if self.pagesCount == 0 {
+              
+              DispatchQueue.main.async {
+                self.webView.loadHTMLString(html, baseURL: URL(string: "\(baseUrl)\(basePath)"))
+              }
+              
               let pagination: Elements = try main.getElementsByClass("pages").select("a")
               self.pagesCount = Int(try pagination.array().last!.attr("href").dropFirst(basePath.count))!
             }
             
             for page in articles.array() {
-              let link = try page.attr("href")
-              let img = try page.select("img").attr("data-src")
-              let title = try page.select("img").attr("alt")
               
-              self.pages[title] = (baseUrl + link, baseUrl + img)
+              let pageData = PageData()
+              
+              pageData.link = baseUrl + (try page.attr("href"))
+              pageData.image = baseUrl + (try page.select("img").attr("data-src"))
+              pageData.title = try page.select("img").attr("alt")
+              
+              DispatchQueue.main.async {
+                do {
+                  try realm.write {
+                    realm.add(pageData, update: .modified)
+                  }
+                } catch let error {
+                  print(error.localizedDescription)
+                }
+              }
             }
           } catch let error {
             print(error.localizedDescription)
@@ -77,8 +98,8 @@ class ViewController: UIViewController {
         case .failure(let error):
           print(error.localizedDescription)
         }
-        page += 1
-        print(self.pagesCount)
+        print(url)
+        pageNumber += 1
         semaphore.signal()
       }
       semaphore.wait()
